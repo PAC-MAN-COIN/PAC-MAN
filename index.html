@@ -1,167 +1,153 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | PAC-MAN</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: black;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        overflow: hidden;
-      }
-
-      #unity-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-      }
-
-      #unity-canvas {
-        display: block;
-        width: 100%;
-        height: auto;
-        max-height: 100%;
-        aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
-      }
-
-      #unity-loading-bar {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        z-index: 10;
-      }
-
-      #unity-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        background-color: rgba(0, 0, 0, 0.8);
-        color: white;
-        font-size: 14px;
-        z-index: 5;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-      }
-
-      @media (max-width: 768px) {
-        #unity-canvas {
-          height: auto;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
         }
-      }
+
+        #unity-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #unity-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+            aspect-ratio: 16 / 9; /* Maintain 16:9 aspect ratio */
+        }
+
+        #unity-loading-bar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        #unity-warning {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            z-index: 20;
+        }
+
+        @media (max-width: 768px) {
+            #unity-canvas {
+                height: auto;
+            }
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div id="unity-container">
-      <canvas id="unity-canvas" tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
         </div>
-      </div>
-      <div id="unity-warning"></div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">PAC-MAN</div>
-      </div>
+        <div id="unity-warning"></div>
     </div>
 
     <script>
-      const container = document.querySelector("#unity-container");
-      const canvas = document.querySelector("#unity-canvas");
-      const loadingBar = document.querySelector("#unity-loading-bar");
-      const progressBarFull = document.querySelector("#unity-progress-bar-full");
-      const fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      const warningBanner = document.querySelector("#unity-warning");
+        const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingBar = document.querySelector("#unity-loading-bar");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const warningBanner = document.querySelector("#unity-warning");
 
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? "block" : "none";
-        }
-        const div = document.createElement("div");
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type === "error") div.style = "background: red; padding: 10px;";
-        else {
-          if (type === "warning") div.style = "background: yellow; padding: 10px;";
-          setTimeout(() => {
-            warningBanner.removeChild(div);
+        function unityShowBanner(msg, type) {
+            function updateBannerVisibility() {
+                warningBanner.style.display = warningBanner.children.length ? "block" : "none";
+            }
+            const div = document.createElement("div");
+            div.innerHTML = msg;
+            warningBanner.appendChild(div);
+            if (type === "error") div.style = "background: red; padding: 10px;";
+            else {
+                if (type === "warning") div.style = "background: yellow; padding: 10px;";
+                setTimeout(() => {
+                    warningBanner.removeChild(div);
+                    updateBannerVisibility();
+                }, 5000);
+            }
             updateBannerVisibility();
-          }, 5000);
         }
-        updateBannerVisibility();
-      }
 
-      const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/PAC-MAN.loader.js";
-      const config = {
-        dataUrl: buildUrl + "/PAC-MAN.data",
-        frameworkUrl: buildUrl + "/PAC-MAN.framework.js",
-        codeUrl: buildUrl + "/PAC-MAN.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "Pacman",
-        productName: "PAC-MAN",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
+        const buildUrl = "Build";
+        const loaderUrl = buildUrl + "/PAC-MAN.loader.js";
+        const config = {
+            dataUrl: buildUrl + "/PAC-MAN.data",
+            frameworkUrl: buildUrl + "/PAC-MAN.framework.js",
+            codeUrl: buildUrl + "/PAC-MAN.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "Pacman",
+            productName: "PAC-MAN",
+            productVersion: "1.0",
+            showBanner: unityShowBanner,
+        };
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        const meta = document.createElement("meta");
-        meta.name = "viewport";
-        meta.content = "width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes";
-        document.getElementsByTagName("head")[0].appendChild(meta);
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            const meta = document.createElement("meta");
+            meta.name = "viewport";
+            meta.content = "width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes";
+            document.getElementsByTagName("head")[0].appendChild(meta);
 
-        // For better performance on mobile, uncomment to set lower resolution:
-        // config.devicePixelRatio = 1;
-      }
-
-      loadingBar.style.display = "block";
-
-      const script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        })
-          .then((unityInstance) => {
-            loadingBar.style.display = "none";
-            fullscreenButton.onclick = () => {
-              unityInstance.SetFullscreen(1);
-            };
-          })
-          .catch((message) => {
-            alert(message);
-          });
-      };
-
-      document.body.appendChild(script);
-
-      // Add dynamic resizing
-      window.addEventListener("resize", () => {
-        const aspectRatio = 16 / 9;
-        const width = container.offsetWidth;
-        const height = container.offsetHeight;
-        if (width / height > aspectRatio) {
-          canvas.style.width = `${height * aspectRatio}px`;
-          canvas.style.height = `${height}px`;
-        } else {
-          canvas.style.width = `${width}px`;
-          canvas.style.height = `${width / aspectRatio}px`;
+            // For better performance on mobile, uncomment to set lower resolution:
+            // config.devicePixelRatio = 1;
         }
-      });
+
+        loadingBar.style.display = "block";
+
+        const script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            createUnityInstance(canvas, config, (progress) => {
+                progressBarFull.style.width = 100 * progress + "%";
+            })
+                .then((unityInstance) => {
+                    loadingBar.style.display = "none";
+                })
+                .catch((message) => {
+                    alert(message);
+                });
+        };
+
+        document.body.appendChild(script);
+
+        // Add dynamic resizing
+        window.addEventListener("resize", () => {
+            const aspectRatio = 16 / 9;
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            if (width / height > aspectRatio) {
+                canvas.style.width = `${height * aspectRatio}px`;
+                canvas.style.height = `${height}px`;
+            } else {
+                canvas.style.width = `${width}px`;
+                canvas.style.height = `${width / aspectRatio}px`;
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
