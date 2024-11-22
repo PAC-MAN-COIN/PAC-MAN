@@ -6,8 +6,8 @@
     <title>Unity WebGL Player | PAC-MAN</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=1024 height=768 tabindex="-1" style="width: 1024px; height: 768px; background: #1F1F20"></canvas>
-    <script src="Build/PackmanBuild.loader.js"></script>
+    <canvas id="unity-canvas" width=1920 height=1080 tabindex="-1" style="width: 1920px; height: 1080px; background: #1F1F20"></canvas>
+    <script src="Build/PAC-MAN.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
@@ -25,9 +25,9 @@
       }
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/PackmanBuild.data",
-        frameworkUrl: "Build/PackmanBuild.framework.js",
-        codeUrl: "Build/PackmanBuild.wasm",
+        dataUrl: "Build/PAC-MAN.data",
+        frameworkUrl: "Build/PAC-MAN.framework.js",
+        codeUrl: "Build/PAC-MAN.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Pacman",
         productName: "PAC-MAN",
